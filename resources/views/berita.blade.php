@@ -2242,7 +2242,11 @@
 
             </div>
 
-            <div class="article-grid" id="article-grid"></div>
+           <div class="article-grid" id="article-grid">
+              @foreach ($articles as $article)
+        <x-article-card :article="$article" />
+             @endforeach
+              </div>
 
             <p class="no-results" id="no-results" hidden>
 
@@ -2455,6 +2459,9 @@
             });
 
             const grid = document.getElementById('article-grid');
+            const gridCards = Array.from(
+            grid.querySelectorAll('.article-card')
+            );
 
             const searchInput = document.getElementById('search-input');
 
@@ -2503,140 +2510,86 @@
             }
 
             function getFilteredArticles() {
+    const query = searchInput.value
+        .trim()
+        .toLocaleLowerCase('id');
 
-                const query = searchInput.value.trim().toLocaleLowerCase('id');
+    return gridCards.filter(function (card) {
+        const matchesCategory =
+            activeCategory === 'semua' ||
+            card.dataset.category === activeCategory;
 
-                return articles.filter(function (article) {
+        const searchableText = (
+            (card.dataset.title || '') + ' ' +
+            (card.dataset.excerpt || '') + ' ' +
+            (card.dataset.label || '')
+        ).toLocaleLowerCase('id');
 
-                    const matchesCategory =
+        const matchesText =
+            !query || searchableText.includes(query);
 
-                        activeCategory === 'semua' ||
-
-                        article.category === activeCategory;
-
-                    const matchesText =
-
-                        !query ||
-
-                        (article.title + ' ' + article.excerpt + ' ' + article.label)
-
-                            .toLocaleLowerCase('id').includes(query);
-
-                    return matchesCategory && matchesText;
-
-                });
-
-            }
+        return matchesCategory && matchesText;
+    });
+}
 
             function renderArticles() {
+    const results = getFilteredArticles();
 
-                const results = getFilteredArticles();
+    const totalPages = Math.max(
+        1,
+        Math.ceil(results.length / itemsPerPage)
+    );
 
-                const totalPages = Math.max(1, Math.ceil(results.length / itemsPerPage));
+    currentPage = Math.min(currentPage, totalPages);
 
-                currentPage = Math.min(currentPage, totalPages);
+    const start = (currentPage - 1) * itemsPerPage;
+    const visibleArticles = results.slice(
+        start,
+        start + itemsPerPage
+    );
 
-                const start = (currentPage - 1) * itemsPerPage;
+    const visibleCards = new Set(visibleArticles);
 
-                const visibleArticles = results.slice(start, start + itemsPerPage);
+    gridCards.forEach(function (card) {
+        card.style.display = visibleCards.has(card) ? '' : 'none';
+    });
 
-                grid.innerHTML = visibleArticles.map(function (article) {
+    countLabel.textContent =
+        'Halaman ' + currentPage + ' dari ' + totalPages +
+        ' · ' + results.length + ' berita';
 
-                    return `
+    noResults.hidden = results.length !== 0;
 
-                        <article class="article-card">
+    pageNumbers.innerHTML = '';
 
-                           <a href="${escapeHTML(article.url)}" class="article-image">
-                                <img src="${escapeHTML(article.image)}"
+    for (let i = 1; i <= totalPages; i++) {
+        const button = document.createElement('button');
 
-                                     alt="${escapeHTML(article.title)}"
+        button.type = 'button';
+        button.textContent = i;
+        button.className =
+            i === currentPage ? 'page-active' : '';
 
-                                     loading="lazy">
+        if (i === currentPage) {
+            button.setAttribute('aria-current', 'page');
+        }
 
-                            </a>
+        button.addEventListener('click', function () {
+            currentPage = i;
+            renderArticles();
 
-                            <div class="article-copy">
+            document.getElementById('article-list').scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        });
 
-                                <span class="article-category">${escapeHTML(article.label)}</span>
+        pageNumbers.appendChild(button);
+    }
 
-                                <h3 class="article-title">
-
-                                    <a href="${escapeHTML(article.url)}">${escapeHTML(article.title)}</a>
-
-                                </h3>
-
-                                <p class="article-description">${escapeHTML(article.excerpt)}</p>
-
-                                <div class="article-meta">
-
-                                    <span>${escapeHTML(article.date)}</span>
-
-                                    <span class="sep">•</span>
-
-                                    <span>BERITA MAJU DIGITAL</span>
-
-                                </div>
-
-                            </div>
-
-                        </article>
-
-                    `;
-
-                }).join('');
-
-                countLabel.textContent =
-
-                    'Halaman ' + currentPage + ' dari ' + totalPages +
-
-                    ' · ' + results.length + ' berita';
-
-                noResults.hidden = results.length !== 0;
-
-                pageNumbers.innerHTML = '';
-
-                for (let i = 1; i <= totalPages; i++) {
-
-                    const button = document.createElement('button');
-
-                    button.type = 'button';
-
-                    button.textContent = i;
-
-                    button.className = i === currentPage ? 'page-active' : '';
-
-                    if (i === currentPage) {
-
-                        button.setAttribute('aria-current', 'page');
-
-                    }
-
-                    button.addEventListener('click', function () {
-
-                        currentPage = i;
-
-                        renderArticles();
-
-                        document.getElementById('article-list').scrollIntoView({
-
-                            behavior: 'smooth',
-
-                            block: 'start'
-
-                        });
-
-                    });
-
-                    pageNumbers.appendChild(button);
-
-                }
-
-                prevButton.disabled = currentPage <= 1;
-
-                nextButton.disabled = currentPage >= totalPages;
-
-            }
-
+    prevButton.disabled = currentPage <= 1;
+    nextButton.disabled = currentPage >= totalPages;
+}
             function applyCategory(category) {
 
                 activeCategory = category;
