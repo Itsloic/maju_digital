@@ -1805,7 +1805,61 @@
 
         }
 
-    </style>
+    /* GRID BERITA: 5 KOLOM DI DESKTOP */
+.article-grid#article-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    column-gap: 18px;
+    row-gap: 0;
+    align-items: start;
+}
+
+/* Ukuran teks agar sesuai dengan kartu yang lebih kecil */
+.article-grid#article-grid .article-title {
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+.article-grid#article-grid .article-description {
+    font-size: 10px;
+    line-height: 1.7;
+}
+
+/* Laptop atau layar menengah */
+@media (max-width: 1200px) {
+    .article-grid#article-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+/* Tablet */
+@media (max-width: 950px) {
+    .article-grid#article-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+/* Ponsel */
+@media (max-width: 650px) {
+    .article-grid#article-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Ponsel kecil */
+@media (max-width: 420px) {
+    .article-grid#article-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .article-grid#article-grid .article-title {
+        font-size: 20px;
+    }
+
+    .article-grid#article-grid .article-description {
+        font-size: 12px;
+    }
+}</style>
 
 </head>
 
@@ -2459,9 +2513,6 @@
             });
 
             const grid = document.getElementById('article-grid');
-            const gridCards = Array.from(
-            grid.querySelectorAll('.article-card')
-            );
 
             const searchInput = document.getElementById('search-input');
 
@@ -2510,86 +2561,140 @@
             }
 
             function getFilteredArticles() {
-    const query = searchInput.value
-        .trim()
-        .toLocaleLowerCase('id');
 
-    return gridCards.filter(function (card) {
-        const matchesCategory =
-            activeCategory === 'semua' ||
-            card.dataset.category === activeCategory;
+                const query = searchInput.value.trim().toLocaleLowerCase('id');
 
-        const searchableText = (
-            (card.dataset.title || '') + ' ' +
-            (card.dataset.excerpt || '') + ' ' +
-            (card.dataset.label || '')
-        ).toLocaleLowerCase('id');
+                return articles.filter(function (article) {
 
-        const matchesText =
-            !query || searchableText.includes(query);
+                    const matchesCategory =
 
-        return matchesCategory && matchesText;
-    });
-}
+                        activeCategory === 'semua' ||
+
+                        article.category === activeCategory;
+
+                    const matchesText =
+
+                        !query ||
+
+                        (article.title + ' ' + article.excerpt + ' ' + article.label)
+
+                            .toLocaleLowerCase('id').includes(query);
+
+                    return matchesCategory && matchesText;
+
+                });
+
+            }
 
             function renderArticles() {
-    const results = getFilteredArticles();
 
-    const totalPages = Math.max(
-        1,
-        Math.ceil(results.length / itemsPerPage)
-    );
+                const results = getFilteredArticles();
 
-    currentPage = Math.min(currentPage, totalPages);
+                const totalPages = Math.max(1, Math.ceil(results.length / itemsPerPage));
 
-    const start = (currentPage - 1) * itemsPerPage;
-    const visibleArticles = results.slice(
-        start,
-        start + itemsPerPage
-    );
+                currentPage = Math.min(currentPage, totalPages);
 
-    const visibleCards = new Set(visibleArticles);
+                const start = (currentPage - 1) * itemsPerPage;
 
-    gridCards.forEach(function (card) {
-        card.style.display = visibleCards.has(card) ? '' : 'none';
-    });
+                const visibleArticles = results.slice(start, start + itemsPerPage);
 
-    countLabel.textContent =
-        'Halaman ' + currentPage + ' dari ' + totalPages +
-        ' · ' + results.length + ' berita';
+                grid.innerHTML = visibleArticles.map(function (article) {
 
-    noResults.hidden = results.length !== 0;
+                    return `
 
-    pageNumbers.innerHTML = '';
+                        <article class="article-card">
 
-    for (let i = 1; i <= totalPages; i++) {
-        const button = document.createElement('button');
+                           <a href="${escapeHTML(article.url)}" class="article-image">
+                                <img src="${escapeHTML(article.image)}"
 
-        button.type = 'button';
-        button.textContent = i;
-        button.className =
-            i === currentPage ? 'page-active' : '';
+                                     alt="${escapeHTML(article.title)}"
 
-        if (i === currentPage) {
-            button.setAttribute('aria-current', 'page');
-        }
+                                     loading="lazy">
 
-        button.addEventListener('click', function () {
-            currentPage = i;
-            renderArticles();
+                            </a>
 
-            document.getElementById('article-list').scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        });
+                            <div class="article-copy">
 
-        pageNumbers.appendChild(button);
-    }
+                                <span class="article-category">${escapeHTML(article.label)}</span>
 
-    prevButton.disabled = currentPage <= 1;
-    nextButton.disabled = currentPage >= totalPages;
-}
+                                <h3 class="article-title">
+
+                                    <a href="${escapeHTML(article.url)}">${escapeHTML(article.title)}</a>
+
+                                </h3>
+
+                                <p class="article-description">${escapeHTML(article.excerpt)}</p>
+
+                                <div class="article-meta">
+
+                                    <span>${escapeHTML(article.date)}</span>
+
+                                    <span class="sep">•</span>
+
+                                    <span>BERITA MAJU DIGITAL</span>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+                    `;
+
+                }).join('');
+
+                countLabel.textContent =
+
+                    'Halaman ' + currentPage + ' dari ' + totalPages +
+
+                    ' · ' + results.length + ' berita';
+
+                noResults.hidden = results.length !== 0;
+
+                pageNumbers.innerHTML = '';
+
+                for (let i = 1; i <= totalPages; i++) {
+
+                    const button = document.createElement('button');
+
+                    button.type = 'button';
+
+                    button.textContent = i;
+
+                    button.className = i === currentPage ? 'page-active' : '';
+
+                    if (i === currentPage) {
+
+                        button.setAttribute('aria-current', 'page');
+
+                    }
+
+                    button.addEventListener('click', function () {
+
+                        currentPage = i;
+
+                        renderArticles();
+
+                        document.getElementById('article-list').scrollIntoView({
+
+                            behavior: 'smooth',
+
+                            block: 'start'
+
+                        });
+
+                    });
+
+                    pageNumbers.appendChild(button);
+
+                }
+
+                prevButton.disabled = currentPage <= 1;
+
+                nextButton.disabled = currentPage >= totalPages;
+
+            }
+
             function applyCategory(category) {
 
                 activeCategory = category;

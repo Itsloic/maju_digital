@@ -12,13 +12,26 @@ use Illuminate\Validation\Rule;
 class ArticleAdminController extends Controller
 {
     public function index()
-    {
-        $articles = Article::with('category')
-            ->orderByDesc('created_at')
-            ->paginate(10);
+{
+    $articles = Article::with('category')
+        ->orderByDesc('created_at')
+        ->paginate(10);
 
-        return view('admin.artikel.index', compact('articles'));
-    }
+    $totalArticles = Article::count();
+
+    $draftArticles = Article::where('status', 'draft')
+        ->count();
+
+    $publishedArticles = Article::where('status', 'published')
+        ->count();
+
+    return view('admin.artikel.index', compact(
+        'articles',
+        'totalArticles',
+        'draftArticles',
+        'publishedArticles'
+    ));
+}
 
     public function create()
     {
