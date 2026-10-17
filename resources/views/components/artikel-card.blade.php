@@ -1,43 +1,17 @@
-<?php 
+<div class="card h-100 shadow-sm">
+    <div class="card-body">
+        <x-kategori-badge :kategori="$artikel->category?->name ?? 'Umum'" />
 
-Namespace Ap\view\components; 
+        <h5 class="card-title mt-2">{{ $artikel->title }}</h5>
 
-Useclosure; 
+        <p class="card-text">
+            {{ \Illuminate\Support\Str::limit($artikel->excerpt, 120) }}
+        </p>
+    </div>
 
-use Illuminate\Contracts\View\View; 
-
-use Illuminate\View\Component; 
-
- 
-
-class ArtikelCard extends Component 
-
-{ 
-
-         /** 
-
-           * Menerima satu data artikel dari halaman yang memanggil. 
-
-          */ 
-
-          public function __construct(public $artikel)  
-
-         { 
-
-         } 
-
-          /** 
-
-           * Menentukan view yang dirender oleh komponen ini. 
-
-           */ 
-
-           public function render(): View|Closure|string 
-
-           { 
-
-                     return view('components.artikel-card');  
-
-            } 
-
- }
+    <div class="card-footer d-flex justify-content-between align-items-center">
+        <small class="text-muted">{{ $artikel->published_at?->format('d M Y') }}</small>
+        <a href="{{ route('berita.show', ['slug' => $artikel->slug]) }}"
+           class="btn btn-sm btn-primary">Baca selengkapnya</a>
+    </div>
+</div>
