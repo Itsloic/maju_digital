@@ -16,7 +16,7 @@ public function up(): void
         $table->id();
 
         $table->foreignId('article_id')
-            ->constrained('articles')
+            ->constrained('artikel', 'id_artikel')
             ->cascadeOnDelete();
 
         $table->foreignId('user_id')

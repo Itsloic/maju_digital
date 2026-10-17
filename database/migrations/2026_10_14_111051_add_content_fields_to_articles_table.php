@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('articles', function (Blueprint $table) {
-            //
+        Schema::table('artikel', function (Blueprint $table) {
+            $table->foreignId('category_id')->nullable()->after('id_artikel')->constrained('categories');
+            $table->foreignId('user_id')->after('category_id')->constrained('users');
+            $table->boolean('is_featured')->default(false)->after('tanggal_publikasi');
+            $table->string('status', 20)->default('draft')->after('is_featured');
         });
     }
 
@@ -21,8 +24,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('articles', function (Blueprint $table) {
-            //
+        Schema::table('artikel', function (Blueprint $table) {
+            $table->dropForeign(['category_id']);
+            $table->dropForeign(['user_id']);
+            $table->dropColumn(['category_id', 'user_id', 'is_featured', 'status']);
         });
     }
 };

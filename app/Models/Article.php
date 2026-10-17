@@ -10,7 +10,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Article extends Model
 {
     use HasFactory;
-protected $primaryKey = 'id_artikel';
+
+    protected $table = 'artikel';
+
+    protected $primaryKey = 'id_artikel';
     protected $fillable = [
         'category_id',
         'user_id',
