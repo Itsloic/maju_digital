@@ -9,15 +9,14 @@ use Illuminate\View\Component;
 class ArtikelCard extends Component
 {
     /**
-     * Create a new component instance.
+     * Menerima satu data artikel dari halaman yang memanggil.
      */
-    public function __construct()
+    public function __construct(public $artikel)
     {
-        //
     }
 
     /**
-     * Get the view / contents that represent the component.
+     * Menentukan view yang dirender oleh komponen ini.
      */
     public function render(): View|Closure|string
     {
