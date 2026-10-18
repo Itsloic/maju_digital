@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Membuat tabel artikel.
+     * Run the migrations.
      */
     public function up(): void
     {
@@ -26,7 +26,7 @@ return new class extends Migration
     }
 
     /**
-     * Membatalkan migrasi dengan menghapus tabel artikel.
+     * Reverse the migrations.
      */
     public function down(): void
     {
