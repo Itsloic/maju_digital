@@ -2,6 +2,7 @@
 
 namespace App\View\Components;
 
+use App\Models\Artikel;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -9,14 +10,14 @@ use Illuminate\View\Component;
 class ArtikelCard extends Component
 {
     /**
-     * Menerima satu data artikel dari halaman yang memanggil.
+     * Create a new component instance.
      */
-    public function __construct(public $artikel)
+    public function __construct(public Artikel $artikel)
     {
     }
 
     /**
-     * Menentukan view yang dirender oleh komponen ini.
+     * Get the view / contents that represent the component.
      */
     public function render(): View|Closure|string
     {

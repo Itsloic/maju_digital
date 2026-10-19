@@ -26,4 +26,9 @@ class Artikel extends Model
             'tanggal_publikasi' => 'datetime',
         ];
     }
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 }

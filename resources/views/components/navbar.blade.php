@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="{{ url('/') }}">
+        <a class="navbar-brand fw-bold" href="{{ route('beranda') }}">
             Maju Digital
         </a>
 
@@ -14,12 +14,12 @@
         <div class="collapse navbar-collapse" id="menuUtama">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->is('/') ? 'active' : '' }}"
-                       href="{{ url('/') }}">Beranda</a>
+                    <a class="nav-link {{ request()->routeIs('beranda') ? 'active' : '' }}"
+                       href="{{ route('beranda') }}">Beranda</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->is('artikel*') ? 'active' : '' }}"
-                       href="{{ url('/artikel') }}">Artikel</a>
+                    <a class="nav-link {{ request()->routeIs('artikel.*') ? 'active' : '' }}"
+                       href="{{ route('artikel.index') }}">Artikel</a>
                 </li>
             </ul>
         </div>

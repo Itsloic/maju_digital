@@ -2,10 +2,12 @@
 
 @php
     $warna = match (strtolower($kategori)) {
-        'berita'     => 'bg-primary',
-        'pengumuman' => 'bg-warning text-dark',
-        'kegiatan'   => 'bg-success',
-        default      => 'bg-secondary',
+        'pemerintahan' => 'bg-primary',
+        'pendidikan' => 'bg-info text-dark',
+        'pelayanan publik' => 'bg-warning text-dark',
+        'kesehatan' => 'bg-success',
+        'infrastruktur' => 'bg-danger',
+        default => 'bg-secondary'
     };
 @endphp
 
