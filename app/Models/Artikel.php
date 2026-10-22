@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Artikel extends Model
 {
@@ -18,6 +19,8 @@ class Artikel extends Model
         'penulis',
         'gambar',
         'tanggal_publikasi',
+        'kategori_id',
+        'penulis_id',
     ];
 
     protected function casts(): array
@@ -30,5 +33,15 @@ class Artikel extends Model
     public function getRouteKeyName(): string
     {
         return 'slug';
+    }
+
+    public function kategoriRelasi(): BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'kategori_id', 'id');
+    }
+
+    public function penulisAkun(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'penulis_id', 'id');
     }
 }

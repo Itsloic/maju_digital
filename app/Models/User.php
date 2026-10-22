@@ -2,43 +2,29 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
+        'role',
+        'level_id',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -46,35 +32,35 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    
-public function articles(): HasMany
-{
-    return $this->hasMany(Article::class);
-}
 
-public function comments(): HasMany
-{
-    return $this->hasMany(Comment::class);
-}
+    // Artikel yang dikelola akun pengguna ini
+    public function artikel(): HasMany
+    {
+        return $this->hasMany(Artikel::class, 'penulis_id', 'id');
+    }
 
-public function publicDocuments(): HasMany
-{
-    return $this->hasMany(PublicDocument::class);
-}
+    public function publicDocuments(): HasMany
+    {
+        return $this->hasMany(PublicDocument::class);
+    }
 
-public function reportedComplaints(): HasMany
-{
-    return $this->hasMany(Complaint::class, 'user_id');
-}
+    public function reportedComplaints(): HasMany
+    {
+        return $this->hasMany(Complaint::class, 'user_id');
+    }
 
-public function assignedComplaints(): HasMany
-{
-    return $this->hasMany(Complaint::class, 'assigned_to');
-}
+    public function assignedComplaints(): HasMany
+    {
+        return $this->hasMany(Complaint::class, 'assigned_to');
+    }
 
-public function complaintUpdates(): HasMany
-{
-    return $this->hasMany(ComplaintUpdate::class, 'updated_by');
-}
+    public function complaintUpdates(): HasMany
+    {
+        return $this->hasMany(ComplaintUpdate::class, 'updated_by');
+    }
 
+    public function level(): BelongsTo
+    {
+        return $this->belongsTo(Level::class, 'level_id', 'id_level');
+    }
 }
