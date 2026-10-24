@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Category;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 
 class CategorySeeder extends Seeder
 {
@@ -14,50 +15,43 @@ class CategorySeeder extends Seeder
                 'name' => 'Pemerintahan',
                 'slug' => 'pemerintahan',
                 'description' => 'Informasi kegiatan dan kebijakan pemerintahan.',
-            ],
-            [
-                'name' => 'Pelayanan Publik',
-                'slug' => 'pelayanan-publik',
-                'description' => 'Informasi pelayanan kepada masyarakat.',
-            ],
-            [
-                'name' => 'Pembangunan',
-                'slug' => 'pembangunan',
-                'description' => 'Informasi pembangunan dan infrastruktur daerah.',
+                'status_aktif' => 1,
             ],
             [
                 'name' => 'Pendidikan',
                 'slug' => 'pendidikan',
                 'description' => 'Informasi pendidikan dan kegiatan sekolah.',
+                'status_aktif' => 1,
+            ],
+            [
+                'name' => 'Pelayanan Publik',
+                'slug' => 'pelayanan-publik',
+                'description' => 'Informasi pelayanan kepada masyarakat.',
+                'status_aktif' => 1,
             ],
             [
                 'name' => 'Kesehatan',
                 'slug' => 'kesehatan',
                 'description' => 'Informasi kesehatan dan layanan kesehatan.',
+                'status_aktif' => 1,
             ],
             [
-                'name' => 'Ekonomi',
-                'slug' => 'ekonomi',
-                'description' => 'Informasi ekonomi dan perkembangan UMKM.',
-            ],
-            [
-                'name' => 'Lingkungan',
-                'slug' => 'lingkungan',
-                'description' => 'Informasi lingkungan dan kebersihan daerah.',
-            ],
-            [
-                'name' => 'Pengumuman',
-                'slug' => 'pengumuman',
-                'description' => 'Pengumuman resmi untuk masyarakat.',
+                'name' => 'Infrastruktur',
+                'slug' => 'infrastruktur',
+                'description' => 'Informasi pembangunan dan infrastruktur daerah.',
+                'status_aktif' => 1,
             ],
         ];
 
         foreach ($categories as $category) {
-            Category::firstOrCreate(
+            DB::table('categories')->updateOrInsert(
                 ['slug' => $category['slug']],
                 [
                     'name' => $category['name'],
                     'description' => $category['description'],
+                    'status_aktif' => $category['status_aktif'],
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
                 ]
             );
         }
