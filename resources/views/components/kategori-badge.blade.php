@@ -1,16 +1,16 @@
 @props(['kategori'])
 
 @php
-    $warna = match (strtolower($kategori)) {
-        'pemerintahan' => 'bg-primary',
-        'pendidikan' => 'bg-info text-dark',
-        'pelayanan publik' => 'bg-warning text-dark',
-        'kesehatan' => 'bg-success',
-        'infrastruktur' => 'bg-danger',
-        default => 'bg-secondary'
+    $kelas = match (strtolower($kategori)) {
+        'pemerintahan' => 'badge-pemerintahan',
+        'pendidikan' => 'badge-pendidikan',
+        'pelayanan publik' => 'badge-pelayanan',
+        'kesehatan' => 'badge-kesehatan',
+        'infrastruktur' => 'badge-infrastruktur',
+        default => 'badge-default'
     };
 @endphp
 
-<span {{ $attributes->merge(['class' => 'badge ' . $warna]) }}>
+<span {{ $attributes->merge(['class' => 'badge px-3 py-2 ' . $kelas]) }}>
     {{ $kategori }}
 </span>

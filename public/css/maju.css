@@ -1,0 +1,52 @@
+:root {
+    --biru-utama: #1D4ED8;
+    --navy: #0F2A5C;
+    --biru-muda: #EFF6FF;
+    --teks: #1F2937;
+    --latar: #F8FAFC;
+    --radius: 12px;
+}
+
+body {
+    background-color: var(--latar);
+    color: var(--teks);
+    font-family: 'Inter', sans-serif;
+}
+
+.navbar {
+    background-color: var(--navy) !important;
+}
+
+.footer {
+    background-color: var(--navy);
+    color: #fff;
+}
+
+.card {
+    border-radius: var(--radius);
+    border: none;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+}
+
+.badge-pemerintahan { background-color: #dbeafe; color: #1e40af; }
+.badge-pendidikan { background-color: #dcfce7; color: #166534; }
+.badge-pelayanan { background-color: #ccfbf1; color: #115e59; }
+.badge-kesehatan { background-color: #fee2e2; color: #991b1b; }
+.badge-infrastruktur { background-color: #ffedd5; color: #9a3412; }
+.badge-default { background-color: #f3f4f6; color: #374151; }
+
+.img-placeholder {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(135deg, var(--biru-utama), var(--navy));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 3rem;
+}
