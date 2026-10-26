@@ -3,20 +3,23 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Carbon;
 
 class UserSeeder extends Seeder
 {
     public function run(): void
     {
+        $defaultPassword = env('SEED_DEFAULT_PASSWORD', 'MajuDigital#2026');
+        $hashedPassword = Hash::make($defaultPassword);
+
         $users = [
             // Administrator (Level 1) - 1 user
             [
                 'name' => 'Hendra Gunawan',
                 'email' => 'hendra.gunawan@majudigital.go.id',
-                'password' => Hash::make('MajuDigital#2026'), // MajuDigital#2026
+                'password' => $hashedPassword,
                 'role' => 'administrator',
                 'level_id' => 1,
             ],
@@ -24,14 +27,14 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Siti Marlina',
                 'email' => 'siti.marlina@majudigital.go.id',
-                'password' => Hash::make('MajuDigital#2026'), // MajuDigital#2026
+                'password' => $hashedPassword,
                 'role' => 'editor',
                 'level_id' => 2,
             ],
             [
                 'name' => 'Maya Anggraini',
                 'email' => 'maya.anggraini@majudigital.go.id',
-                'password' => Hash::make('MajuDigital#2026'), // MajuDigital#2026
+                'password' => $hashedPassword,
                 'role' => 'editor',
                 'level_id' => 2,
             ],
@@ -39,49 +42,49 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Rina Wulandari',
                 'email' => 'rina.wulandari@majudigital.go.id',
-                'password' => Hash::make('MajuDigital#2026'), // MajuDigital#2026
+                'password' => $hashedPassword,
                 'role' => 'penulis',
                 'level_id' => 3,
             ],
             [
                 'name' => 'Dedi Hartono',
                 'email' => 'dedi.hartono@majudigital.go.id',
-                'password' => Hash::make('MajuDigital#2026'), // MajuDigital#2026
+                'password' => $hashedPassword,
                 'role' => 'penulis',
                 'level_id' => 3,
             ],
             [
                 'name' => 'Dewi Kartika',
                 'email' => 'dewi.kartika@majudigital.go.id',
-                'password' => Hash::make('MajuDigital#2026'), // MajuDigital#2026
+                'password' => $hashedPassword,
                 'role' => 'penulis',
                 'level_id' => 3,
             ],
             [
                 'name' => 'Eko Susilo',
                 'email' => 'eko.susilo@majudigital.go.id',
-                'password' => Hash::make('MajuDigital#2026'), // MajuDigital#2026
+                'password' => $hashedPassword,
                 'role' => 'penulis',
                 'level_id' => 3,
             ],
             [
                 'name' => 'Wahyu Nugroho',
                 'email' => 'wahyu.nugroho@majudigital.go.id',
-                'password' => Hash::make('MajuDigital#2026'), // MajuDigital#2026
+                'password' => $hashedPassword,
                 'role' => 'penulis',
                 'level_id' => 3,
             ],
             [
                 'name' => 'Agus Prasetyo',
                 'email' => 'agus.prasetyo@majudigital.go.id',
-                'password' => Hash::make('MajuDigital#2026'), // MajuDigital#2026
+                'password' => $hashedPassword,
                 'role' => 'penulis',
                 'level_id' => 3,
             ],
             [
                 'name' => 'Bambang Setiawan',
                 'email' => 'bambang.setiawan@majudigital.go.id',
-                'password' => Hash::make('MajuDigital#2026'), // MajuDigital#2026
+                'password' => $hashedPassword,
                 'role' => 'penulis',
                 'level_id' => 3,
             ],

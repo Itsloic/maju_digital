@@ -26,6 +26,7 @@ class ArtikelManageController extends Controller
     {
         Gate::authorize('tambah-artikel');
         $kategoris = Category::where('status_aktif', true)->orderBy('name')->get();
+
         return view('kelola.artikel.create', compact('kategoris'));
     }
 
@@ -46,7 +47,7 @@ class ArtikelManageController extends Controller
         $originalSlug = $slug;
         $counter = 1;
         while (Artikel::where('slug', $slug)->exists()) {
-            $slug = $originalSlug . '-' . $counter++;
+            $slug = $originalSlug.'-'.$counter++;
         }
 
         $kategori = Category::find($validated['kategori_id']);
@@ -72,6 +73,7 @@ class ArtikelManageController extends Controller
     {
         Gate::authorize('ubah-artikel', $artikel);
         $kategoris = Category::where('status_aktif', true)->orderBy('name')->get();
+
         return view('kelola.artikel.edit', compact('artikel', 'kategoris'));
     }
 
@@ -92,7 +94,7 @@ class ArtikelManageController extends Controller
         $originalSlug = $slug;
         $counter = 1;
         while (Artikel::where('slug', $slug)->where('id_artikel', '!=', $artikel->id_artikel)->exists()) {
-            $slug = $originalSlug . '-' . $counter++;
+            $slug = $originalSlug.'-'.$counter++;
         }
 
         $kategori = Category::find($validated['kategori_id']);
@@ -119,6 +121,7 @@ class ArtikelManageController extends Controller
     {
         Gate::authorize('hapus-artikel', $artikel);
         $artikel->delete();
+
         return redirect()->route('kelola.artikel.index')->with('success', 'Artikel berhasil dihapus.');
     }
 }

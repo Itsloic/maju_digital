@@ -9,32 +9,29 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-   
-public function up(): void
-{
-    Schema::create('complaint_updates', function (Blueprint $table) {
-        $table->id();
+    public function up(): void
+    {
+        Schema::create('complaint_updates', function (Blueprint $table) {
+            $table->id();
 
-        $table->foreignId('complaint_id')
-            ->constrained('complaints')
-            ->cascadeOnDelete();
+            $table->foreignId('complaint_id')
+                ->constrained('complaints')
+                ->cascadeOnDelete();
 
-        $table->foreignId('updated_by')
-            ->nullable()
-            ->constrained('users')
-            ->nullOnDelete();
+            $table->foreignId('updated_by')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
 
-        $table->string('status', 30);
-        $table->text('note')->nullable();
+            $table->string('status', 30);
+            $table->text('note')->nullable();
 
-        $table->timestamps();
-    });
-}
+            $table->timestamps();
+        });
+    }
 
-public function down(): void
-{
-    Schema::dropIfExists('complaint_updates');
-}
-
-
+    public function down(): void
+    {
+        Schema::dropIfExists('complaint_updates');
+    }
 };

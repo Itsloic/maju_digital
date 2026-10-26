@@ -11,9 +11,7 @@ class Layout extends Component
     /**
      * Judul halaman, dikirim dari view yang memanggil layout.
      */
-    public function __construct(public string $title = 'Beranda')
-    {
-    }
+    public function __construct(public string $title = 'Beranda') {}
 
     /**
      * Menentukan view yang dirender oleh komponen ini.

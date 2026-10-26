@@ -9,6 +9,7 @@ use App\Models\User;
 use Database\Seeders\CategorySeeder;
 use Database\Seeders\LevelSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
@@ -33,8 +34,8 @@ class ApiAuthTest extends TestCase
         ];
 
         return User::create([
-            'name' => 'API User ' . $levelId,
-            'email' => 'apiuser' . $levelId . '_' . uniqid() . '@example.com',
+            'name' => 'API User '.$levelId,
+            'email' => 'apiuser'.$levelId.'_'.uniqid().'@example.com',
             'password' => Hash::make('Password123!#'),
             'level_id' => $levelId,
             'role' => $roleMap[$levelId] ?? 'masyarakat',
@@ -92,7 +93,7 @@ class ApiAuthTest extends TestCase
             'tokenable_id' => $user->id,
         ]);
 
-        $this->withHeaders(['Authorization' => 'Bearer ' . $token])
+        $this->withHeaders(['Authorization' => 'Bearer '.$token])
             ->postJson('/api/logout')
             ->assertStatus(200);
 
@@ -114,7 +115,7 @@ class ApiAuthTest extends TestCase
         $this->assertEquals(0, $remainingTokens);
 
         // Debug: check which guard is being used
-        $request = \Illuminate\Http\Request::create('/api/artikel', 'GET', [], [], [], ['HTTP_AUTHORIZATION' => 'Bearer ' . $token]);
+        $request = Request::create('/api/artikel', 'GET', [], [], [], ['HTTP_AUTHORIZATION' => 'Bearer '.$token]);
         $guard = app('auth')->guard('sanctum');
         $guard->setRequest($request);
         $authUser = $guard->user();
@@ -127,7 +128,7 @@ class ApiAuthTest extends TestCase
         \Log::info('Web guard user', ['user' => $webUser ? $webUser->id : null, 'guard' => get_class($webGuard)]);
 
         // Token should be revoked
-        $this->withHeaders(['Authorization' => 'Bearer ' . $token])
+        $this->withHeaders(['Authorization' => 'Bearer '.$token])
             ->getJson('/api/artikel')
             ->assertStatus(401);
     }
@@ -154,7 +155,7 @@ class ApiAuthTest extends TestCase
         // Penulis token
         $penulisToken = $penulis->createToken('test', ['penulis'])->plainTextToken;
 
-        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $penulisToken])
+        $response = $this->withHeaders(['Authorization' => 'Bearer '.$penulisToken])
             ->deleteJson("/api/artikel/{$artikel->id_artikel}");
 
         $response->assertStatus(403);
@@ -182,7 +183,7 @@ class ApiAuthTest extends TestCase
         // Admin token
         $adminToken = $admin->createToken('test', ['admin'])->plainTextToken;
 
-        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $adminToken])
+        $response = $this->withHeaders(['Authorization' => 'Bearer '.$adminToken])
             ->deleteJson("/api/artikel/{$artikel->id_artikel}");
 
         $response->assertStatus(200);
@@ -208,7 +209,7 @@ class ApiAuthTest extends TestCase
 
         $token = $penulis->createToken('test', ['penulis'])->plainTextToken;
 
-        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $token])
+        $response = $this->withHeaders(['Authorization' => 'Bearer '.$token])
             ->getJson('/api/artikel');
 
         $response->assertStatus(200)

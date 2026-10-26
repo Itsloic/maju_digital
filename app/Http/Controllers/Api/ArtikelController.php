@@ -25,7 +25,7 @@ class ArtikelController extends Controller
                     'kategori' => $artikel->kategoriRelasi?->name,
                     'penulis' => $artikel->penulisAkun?->name,
                     'tanggal_publikasi' => $artikel->tanggal_publikasi?->toIso8601String(),
-                    'gambar' => $artikel->gambar ? asset('storage/' . $artikel->gambar) : null,
+                    'gambar' => $artikel->gambar ? asset('storage/'.$artikel->gambar) : null,
                 ];
             }),
             'pagination' => [

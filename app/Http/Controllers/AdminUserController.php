@@ -17,6 +17,7 @@ class AdminUserController extends Controller
     {
         Gate::authorize('kelola-user');
         $users = User::with('level')->latest()->paginate(15);
+
         return view('admin.users.index', compact('users'));
     }
 
@@ -24,6 +25,7 @@ class AdminUserController extends Controller
     {
         Gate::authorize('kelola-user');
         $levels = Level::orderBy('id_level')->get();
+
         return view('admin.users.create', compact('levels'));
     }
 
@@ -62,6 +64,7 @@ class AdminUserController extends Controller
     {
         Gate::authorize('kelola-user');
         $levels = Level::orderBy('id_level')->get();
+
         return view('admin.users.edit', compact('user', 'levels'));
     }
 
@@ -75,7 +78,7 @@ class AdminUserController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'required|email|max:255|unique:users,email,'.$user->id,
             'level_id' => 'required|exists:levels,id_level',
         ]);
 
@@ -107,6 +110,7 @@ class AdminUserController extends Controller
 
         try {
             $user->delete();
+
             return redirect()->route('admin.users.index')->with('success', 'Pengguna berhasil dihapus.');
         } catch (QueryException $e) {
             if ($e->getCode() === '23000') {

@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ArtikelSeeder extends Seeder
 {
@@ -12,27 +12,28 @@ class ArtikelSeeder extends Seeder
     {
         if (DB::table('artikel')->count() > 0) {
             $this->command->info('Artikel sudah ada, seeder dihentikan.');
+
             return;
         }
 
         $kategoriId = DB::table('categories')->pluck('id', 'name');
-        $penulisId  = DB::table('users')->pluck('id', 'name');
+        $penulisId = DB::table('users')->pluck('id', 'name');
 
         // Validasi lookup
         $requiredKategori = ['Pemerintahan', 'Pendidikan', 'Pelayanan Publik', 'Kesehatan', 'Infrastruktur'];
-        $requiredPenulis  = [
+        $requiredPenulis = [
             'Rina Wulandari', 'Dedi Hartono', 'Siti Marlina', 'Maya Anggraini',
             'Wahyu Nugroho', 'Agus Prasetyo', 'Dewi Kartika', 'Hendra Gunawan',
-            'Eko Susilo', 'Bambang Setiawan'
+            'Eko Susilo', 'Bambang Setiawan',
         ];
 
         foreach ($requiredKategori as $k) {
-            if (!isset($kategoriId[$k])) {
+            if (! isset($kategoriId[$k])) {
                 throw new \Exception("Kategori '$k' tidak ditemukan di tabel categories");
             }
         }
         foreach ($requiredPenulis as $p) {
-            if (!isset($penulisId[$p])) {
+            if (! isset($penulisId[$p])) {
                 throw new \Exception("Penulis '$p' tidak ditemukan di tabel users");
             }
         }
@@ -82,18 +83,18 @@ class ArtikelSeeder extends Seeder
 
         foreach ($data as $item) {
             DB::table('artikel')->insert([
-                'kategori'        => $item[0],          // kolom teks legacy
-                'judul'           => $item[1],
-                'slug'            => $item[2],
-                'ringkasan'       => $item[3],
-                'isi'             => $item[4],
-                'penulis'         => $item[5],          // kolom teks legacy
-                'tanggal_publikasi'=> $item[6],
-                'kategori_id'     => $kategoriId[$item[0]],
-                'penulis_id'      => $penulisId[$item[5]],
-                'gambar'          => null,
-                'created_at'      => Carbon::now(),
-                'updated_at'      => Carbon::now(),
+                'kategori' => $item[0],          // kolom teks legacy
+                'judul' => $item[1],
+                'slug' => $item[2],
+                'ringkasan' => $item[3],
+                'isi' => $item[4],
+                'penulis' => $item[5],          // kolom teks legacy
+                'tanggal_publikasi' => $item[6],
+                'kategori_id' => $kategoriId[$item[0]],
+                'penulis_id' => $penulisId[$item[5]],
+                'gambar' => null,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ]);
         }
     }

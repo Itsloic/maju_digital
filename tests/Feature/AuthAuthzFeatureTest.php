@@ -27,6 +27,7 @@ class AuthAuthzFeatureTest extends TestCase
 
         RateLimiter::for('login', function ($request) {
             $throttleKey = Str::transliterate(Str::lower($request->input('email').'|'.$request->ip()));
+
             return Limit::perMinute(5)->by($throttleKey);
         });
         RateLimiter::for('two-factor', function ($request) {
@@ -44,8 +45,8 @@ class AuthAuthzFeatureTest extends TestCase
         ];
 
         return User::create([
-            'name' => 'Test User ' . $levelId,
-            'email' => 'user' . $levelId . '_' . uniqid() . '@example.com',
+            'name' => 'Test User '.$levelId,
+            'email' => 'user'.$levelId.'_'.uniqid().'@example.com',
             'password' => Hash::make('Password123!#'),
             'level_id' => $levelId,
             'role' => $roleMap[$levelId] ?? 'masyarakat',
@@ -135,14 +136,14 @@ class AuthAuthzFeatureTest extends TestCase
 
         // Penulis edit artikel sendiri -> Boleh
         $response = $this->actingAs($penulis)->put("/kelola/artikel/{$artikel->slug}", $updateData);
-        $this->assertEquals(302, $response->getStatusCode(), 'Redirect: ' . $response->headers->get('Location'));
+        $this->assertEquals(302, $response->getStatusCode(), 'Redirect: '.$response->headers->get('Location'));
 
         // Re-fetch artikel because slug may have changed
         $artikel->refresh();
 
         // Penulis lain edit artikel orang lain -> 403
         $response = $this->actingAs($otherPenulis)->put("/kelola/artikel/{$artikel->slug}", $updateData);
-        $this->assertEquals(403, $response->getStatusCode(), 'Status: ' . $response->getStatusCode() . ' Redirect: ' . $response->headers->get('Location'));
+        $this->assertEquals(403, $response->getStatusCode(), 'Status: '.$response->getStatusCode().' Redirect: '.$response->headers->get('Location'));
 
         // Editor & Admin edit -> Boleh
         $this->actingAs($editor)->put("/kelola/artikel/{$artikel->slug}", $updateData)->assertRedirect('/kelola/artikel');

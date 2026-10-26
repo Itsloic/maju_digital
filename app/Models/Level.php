@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Level extends Model
 {
     public const ADMINISTRATOR = 1;
+
     public const EDITOR = 2;
+
     public const PENULIS = 3;
+
     public const MASYARAKAT = 4;
 
     protected $table = 'levels';

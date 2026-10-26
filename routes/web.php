@@ -1,8 +1,9 @@
 <?php
 
+use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\ArtikelManageController;
-use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\DataController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [ArtikelController::class, 'beranda'])->name('beranda');
@@ -16,7 +17,7 @@ Route::get('/portal', function () {
 
 // Tabel Data - Protected
 Route::middleware(['auth', 'verified', 'can:lihat-tabel-data'])->group(function () {
-    Route::get('/data', [App\Http\Controllers\DataController::class, 'index'])->name('data.index');
+    Route::get('/data', [DataController::class, 'index'])->name('data.index');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -48,4 +49,3 @@ Route::middleware(['auth', 'verified', 'can:kelola-user', '2fa.admin', 'password
     Route::put('/admin/users/{user}', [AdminUserController::class, 'update'])->name('admin.users.update');
     Route::delete('/admin/users/{user}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
 });
-
