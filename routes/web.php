@@ -14,3 +14,13 @@ Route::get('/portal', function () {
     return view('portal');
 })->name('portal');
 
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/profil/keamanan', function () {
+        return view('profil.keamanan');
+    })->name('profil.keamanan');
+
+    Route::put('/user/password', function () {
+        return back()->with('status', 'Kata sandi berhasil diperbarui.');
+    })->middleware('password.confirm')->name('user.password.update');
+});
+
