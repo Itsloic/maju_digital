@@ -37,6 +37,37 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+    public function isAdministrator(): bool
+    {
+        return (int) $this->level_id === Level::ADMINISTRATOR;
+    }
+
+    public function isEditor(): bool
+    {
+        return (int) $this->level_id === Level::EDITOR;
+    }
+
+    public function isPenulis(): bool
+    {
+        return (int) $this->level_id === Level::PENULIS;
+    }
+
+    public function isMasyarakat(): bool
+    {
+        return (int) $this->level_id === Level::MASYARAKAT;
+    }
+
+    public function syncRoleFromLevel(): void
+    {
+        $roleMap = [
+            Level::ADMINISTRATOR => 'administrator',
+            Level::EDITOR => 'editor',
+            Level::PENULIS => 'penulis',
+            Level::MASYARAKAT => 'masyarakat',
+        ];
+        $this->role = $roleMap[$this->level_id] ?? 'masyarakat';
+    }
+
     // Artikel yang dikelola akun pengguna ini
     public function artikel(): HasMany
     {
