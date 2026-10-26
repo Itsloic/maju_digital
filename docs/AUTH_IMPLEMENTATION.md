@@ -67,3 +67,19 @@
 4. **API**:
     - `POST /api/login` -> dapatkan `access_token`.
     - Gunakan token di Header `Authorization: Bearer <token>` untuk request `/api/artikel`.
+
+## Keterbatasan
+- **Password**: Password default seeder adalah `MajuDigital#2026` (bisa diubah via `SEED_DEFAULT_PASSWORD` di `.env`).
+- **HTTPS**: Wajib diaktifkan di lingkungan produksi (`SESSION_SECURE_COOKIE=true` di `.env`).
+- **API**: Laravel Sanctum tidak menyediakan *refresh token*.
+- **Login Web**: Menggunakan sistem autentikasi `Fortify` yang memanggil `attempt()` untuk verifikasi kredensial.
+- **Route**: Route tabel data diakses melalui `/data` (bukan `/tabel/artikel` atau `/tabel/kategori`).
+
+## Daftar Route Utama
+| URI | Nama Route | Middleware |
+| :--- | :--- | :--- |
+| `/data` | `data.index` | `auth`, `verified`, `can:lihat-tabel-data` |
+| `/kelola/artikel` | `kelola.artikel.index` | `auth`, `verified` |
+| `/admin/users` | `admin.users.index` | `auth`, `verified`, `can:kelola-user`, `2fa.admin`, `password.confirm` |
+| `/profil/keamanan` | `profil.keamanan` | `auth`, `verified` |
+| `/api/artikel` | - | `auth:sanctum` |

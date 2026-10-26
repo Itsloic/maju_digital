@@ -8,11 +8,8 @@ use App\Models\Level;
 use App\Models\User;
 use Database\Seeders\CategorySeeder;
 use Database\Seeders\LevelSeeder;
-use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class AuthAuthzFeatureTest extends TestCase
@@ -25,13 +22,15 @@ class AuthAuthzFeatureTest extends TestCase
         $this->seed(LevelSeeder::class);
         $this->seed(CategorySeeder::class);
 
-        RateLimiter::for('login', function ($request) {
-            $throttleKey = Str::transliterate(Str::lower($request->input('email').'|'.$request->ip()));
-
-            return Limit::perMinute(5)->by($throttleKey);
-        });
-        RateLimiter::for('two-factor', function ($request) {
-            return Limit::perMinute(5)->by($request->session()->get('login.id'));
+        // Register rate limiters for tests (FortifyServiceProvider boot may not run in test)
+        $this->app->booted(function () {
+            \Illuminate\Support\Facades\RateLimiter::for('login', function ($request) {
+                $throttleKey = \Illuminate\Support\Str::transliterate(\Illuminate\Support\Str::lower($request->input('email').'|'.$request->ip()));
+                return \Illuminate\Cache\RateLimiting\Limit::perMinute(5)->by($throttleKey);
+            });
+            \Illuminate\Support\Facades\RateLimiter::for('two-factor', function ($request) {
+                return \Illuminate\Cache\RateLimiting\Limit::perMinute(5)->by($request->session()->get('login.id'));
+            });
         });
     }
 
@@ -276,5 +275,28 @@ class AuthAuthzFeatureTest extends TestCase
 
         $response->assertSessionHas('error', 'User masih memiliki artikel dan tidak dapat dihapus.');
         $this->assertDatabaseHas('users', ['id' => $penulis->id]);
+    }
+
+    public function test_update_user_level_syncs_role(): void
+    {
+        $admin = $this->createUser(Level::ADMINISTRATOR);
+        $admin->forceFill(['two_factor_confirmed_at' => now()])->save();
+
+        $penulis = $this->createUser(Level::PENULIS);
+        $this->assertEquals('penulis', $penulis->role);
+
+        $response = $this->actingAs($admin)
+            ->withSession(['auth.password_confirmed_at' => time()])
+            ->put("/admin/users/{$penulis->id}", [
+                'name' => $penulis->name,
+                'email' => $penulis->email,
+                'level_id' => Level::EDITOR,
+            ]);
+
+        $response->assertRedirect(route('admin.users.index'));
+
+        $penulis->refresh();
+        $this->assertEquals('editor', $penulis->role);
+        $this->assertEquals(Level::EDITOR, $penulis->level_id);
     }
 }
