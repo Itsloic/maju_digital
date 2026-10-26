@@ -12,9 +12,7 @@ class ArtikelHeader extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(public Artikel $artikel)
-    {
-    }
+    public function __construct(public Artikel $artikel) {}
 
     /**
      * Get the view / contents that represent the component.

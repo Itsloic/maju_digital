@@ -29,9 +29,10 @@ class ArtikelController extends Controller
                 $kategori->warna_bg = $warna['bg'];
                 $kategori->warna_teks = $warna['teks'];
                 $kategori->ikon = $warna['ikon'];
+
                 return $kategori;
             });
-        
+
         return view('beranda', compact('artikels', 'kategoris'));
     }
 
@@ -41,6 +42,7 @@ class ArtikelController extends Controller
     public function index(): View
     {
         $artikels = Artikel::orderByDesc('tanggal_publikasi')->paginate(9);
+
         return view('artikel.index', compact('artikels'));
     }
 

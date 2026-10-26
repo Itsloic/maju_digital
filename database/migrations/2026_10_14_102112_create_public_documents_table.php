@@ -9,33 +9,31 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    
-public function up(): void
-{
-    Schema::create('public_documents', function (Blueprint $table) {
-        $table->id();
+    public function up(): void
+    {
+        Schema::create('public_documents', function (Blueprint $table) {
+            $table->id();
 
-        $table->foreignId('user_id')
-            ->nullable()
-            ->constrained('users')
-            ->nullOnDelete();
+            $table->foreignId('user_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
 
-        $table->string('title');
-        $table->string('slug')->unique();
-        $table->string('category', 100);
-        $table->text('description')->nullable();
-        $table->string('file_path');
-        $table->string('file_type', 50)->nullable();
-        $table->string('status', 20)->default('published');
-        $table->timestamp('published_at')->nullable();
+            $table->string('title');
+            $table->string('slug')->unique();
+            $table->string('category', 100);
+            $table->text('description')->nullable();
+            $table->string('file_path');
+            $table->string('file_type', 50)->nullable();
+            $table->string('status', 20)->default('published');
+            $table->timestamp('published_at')->nullable();
 
-        $table->timestamps();
-    });
-}
+            $table->timestamps();
+        });
+    }
 
-public function down(): void
-{
-    Schema::dropIfExists('public_documents');
-}
-
+    public function down(): void
+    {
+        Schema::dropIfExists('public_documents');
+    }
 };

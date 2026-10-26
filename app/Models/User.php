@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Laravel\Fortify\TwoFactorAuthenticatable;
+use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, TwoFactorAuthenticatable;
 
     protected $fillable = [
         'name',
@@ -18,11 +21,14 @@ class User extends Authenticatable
         'password',
         'role',
         'level_id',
+        'email_verified_at',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
     ];
 
     protected function casts(): array
@@ -31,6 +37,37 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function isAdministrator(): bool
+    {
+        return (int) $this->level_id === Level::ADMINISTRATOR;
+    }
+
+    public function isEditor(): bool
+    {
+        return (int) $this->level_id === Level::EDITOR;
+    }
+
+    public function isPenulis(): bool
+    {
+        return (int) $this->level_id === Level::PENULIS;
+    }
+
+    public function isMasyarakat(): bool
+    {
+        return (int) $this->level_id === Level::MASYARAKAT;
+    }
+
+    public function syncRoleFromLevel(): void
+    {
+        $roleMap = [
+            Level::ADMINISTRATOR => 'administrator',
+            Level::EDITOR => 'editor',
+            Level::PENULIS => 'penulis',
+            Level::MASYARAKAT => 'masyarakat',
+        ];
+        $this->role = $roleMap[$this->level_id] ?? 'masyarakat';
     }
 
     // Artikel yang dikelola akun pengguna ini
